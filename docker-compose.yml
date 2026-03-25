@@ -8,6 +8,8 @@ services:
       - "3000:3000"
     env_file:
       - .env
+    environment:
+      - TZ=Asia/Shanghai
     volumes:
       - ./midscene_run:/app/midscene_run
       - ./screenshots:/app/screenshots
