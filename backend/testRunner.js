@@ -50,7 +50,7 @@ async function runMidsceneTest(url, stepsText, onLog) {
 
         browser = await puppeteer.launch({
             executablePath: chromePath,
-            headless: true,
+            headless: 'new',
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
@@ -61,7 +61,35 @@ async function runMidsceneTest(url, stepsText, onLog) {
                 '--disable-web-security',
                 '--disable-features=IsolateOrigins,site-per-process',
                 '--window-size=1280,800',
-                '--font-render-hinting=none'
+                '--font-render-hinting=none',
+                '--disable-background-networking',
+                '--disable-breakpad',
+                '--disable-component-update',
+                '--disable-sync',
+                '--no-first-run',
+                '--disable-logging',
+                '--disable-notifications',
+                '--disable-translate',
+                '--disable-plugins',
+                '--disable-background-timer-throttling',
+                '--disable-backgrounding-occluded-windows',
+                '--disable-renderer-backgrounding',
+                '--disable-hang-monitor',
+                '--disable-ipc-flooding-protection',
+                '--disable-popup-blocking',
+                '--disable-prompt-on-repost',
+                '--disable-client-side-phishing-detection',
+                '--disable-component-extensions-with-background-pages',
+                '--disable-extensions-http-throttling',
+                '--disable-field-trial-config',
+                '--enable-features=NetworkService,NetworkServiceInProcess',
+                '--force-color-profile=srgb',
+                '--hide-scrollbars',
+                '--ignore-gpu-blacklist',
+                '--in-process-gpu',
+                '--mute-audio',
+                '--no-zygote',
+                '--single-process'
             ]
         });
         
@@ -74,7 +102,7 @@ async function runMidsceneTest(url, stepsText, onLog) {
 
         agent = new PuppeteerAgent(page, {
             generateReport: true,
-            waitAfterAction: 200
+            waitAfterAction: 100
         });
 
         log(`   📸 截取初始截图...`);

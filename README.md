@@ -407,6 +407,26 @@ URL: https://example.com/login
 2. 检查 AI 模型 API 是否可访问
 3. 如在国内使用 OpenAI，需要配置代理
 
+### Q: Windows Docker 容器执行很慢
+
+**A:** 这是 Docker for Windows 的固有限制。Docker Desktop for Windows 使用 WSL2 虚拟化技术，存在以下性能开销：
+
+| 环境 | 执行耗时 | 性能对比 |
+|------|----------|----------|
+| 本地 Windows | ~23 秒 | 基准 |
+| Linux Docker 容器 | ~21 秒 | **最优** ✅ |
+| Windows Docker 容器 | ~126 秒 | 5.5x 慢 ❌ |
+
+**解决方案：**
+1. **推荐**：生产环境部署到 Linux 服务器，性能最优
+2. 本地开发测试可使用本地运行方式（`npm run dev`）
+3. 如需在 Windows 上使用 Docker，可接受较慢的执行速度
+
+**Linux 服务器推荐配置：**
+- CPU: 2 核及以上
+- 内存: 4GB 及以上
+- 系统: Ubuntu 20.04+ / CentOS 7+ / Debian 10+
+
 ## 🤝 贡献
 
 欢迎提交 Issue 和 Pull Request！
