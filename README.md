@@ -29,17 +29,73 @@ cp .env.example .env
 
 在 `.env` 文件中配置 AI 模型：
 
+### 支持的 AI 模型
+
+| 模型 | 提供商 | 特点 |
+|------|--------|------|
+| **Qwen3-VL** | 阿里云 | 推荐，视觉能力强，速度快 |
+| **Qwen3.5** | 阿里云 | 通用模型，性价比高 |
+| **GPT-4o** | OpenAI | 视觉能力强，国际用户推荐 |
+| **Doubao-Seed** | 火山引擎 | 豆包模型，国内访问稳定 |
+| **GLM-4.6V** | 智谱 AI | 国产视觉模型，性能优秀 |
+| **DeepSeek-VL** | DeepSeek | 开源模型，可私有部署 |
+
+### 配置示例
+
+#### 阿里千问 Qwen3-VL（推荐）
+
 ```env
-# 阿里千问模型配置（推荐）
 MIDSCENE_MODEL_NAME=qwen3-vl-plus
 MIDSCENE_MODEL_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
 MIDSCENE_MODEL_API_KEY=your-api-key-here
 MIDSCENE_MODEL_FAMILY=qwen-vl
-
-# 或使用 OpenAI
-# MIDSCENE_MODEL_NAME=gpt-4o
-# MIDSCENE_MODEL_API_KEY=your-openai-api-key
 ```
+
+#### 阿里千问 Qwen3.5
+
+```env
+MIDSCENE_MODEL_NAME=qwen3.5-plus
+MIDSCENE_MODEL_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
+MIDSCENE_MODEL_API_KEY=your-api-key-here
+MIDSCENE_MODEL_FAMILY=qwen3.5
+MIDSCENE_MODEL_REASONING_ENABLED=false
+```
+
+#### OpenAI GPT-4o
+
+```env
+MIDSCENE_MODEL_NAME=gpt-4o
+MIDSCENE_MODEL_API_KEY=your-openai-api-key
+```
+
+#### 火山引擎 豆包 Seed
+
+```env
+MIDSCENE_MODEL_BASE_URL=https://ark.cn-beijing.volces.com/api/v3
+MIDSCENE_MODEL_API_KEY=your-api-key-here
+MIDSCENE_MODEL_NAME=your-endpoint-id
+MIDSCENE_MODEL_FAMILY=doubao-seed
+```
+
+#### 智谱 AI GLM-4.6V
+
+```env
+MIDSCENE_MODEL_BASE_URL=https://open.bigmodel.cn/api/paas/v4
+MIDSCENE_MODEL_API_KEY=your-api-key-here
+MIDSCENE_MODEL_NAME=glm-4.6v
+MIDSCENE_MODEL_FAMILY=glm-v
+```
+
+#### DeepSeek VL
+
+```env
+MIDSCENE_MODEL_BASE_URL=https://api.deepseek.com
+MIDSCENE_MODEL_API_KEY=your-api-key-here
+MIDSCENE_MODEL_NAME=deepseek-vl
+MIDSCENE_MODEL_FAMILY=deepseek-vl
+```
+
+> 💡 更多模型配置请参考 [Midscene.js 官方文档](https://midscenejs.com/zh/model-common-config.html)
 
 ## 🚀 使用
 
