@@ -80,7 +80,11 @@ mv .env.example .env
 # 4. 下载 docker-compose.yml
 curl -O https://raw.githubusercontent.com/levelksk/ui_auto_test_demo/main/docker-compose.yml
 
-# 5. 一键启动（自动拉取预构建镜像）
+# 5. 创建目录并设置权限（Linux 必须）
+mkdir -p midscene_run/report midscene_run/log screenshots
+chmod -R 777 midscene_run screenshots
+
+# 6. 一键启动（自动拉取预构建镜像）
 docker-compose up -d
 ```
 
@@ -120,7 +124,11 @@ cd ui_auto_test_demo
 cp .env.example .env
 # 编辑 .env 文件，填入你的 AI 模型 API Key
 
-# 3. 构建并启动
+# 3. 创建目录并设置权限（Linux 必须）
+mkdir -p midscene_run/report midscene_run/log screenshots
+chmod -R 777 midscene_run screenshots
+
+# 4. 构建并启动
 docker-compose -f docker-compose.build.yml up -d --build
 ```
 
