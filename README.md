@@ -63,23 +63,25 @@ npm run dev
 ### 方式二：Docker 部署（推荐）
 
 ```bash
-# 1. 克隆项目
-git clone https://github.com/levelksk/ui_auto_test_demo.git
-cd ui_auto_test_demo
+# 1. 创建项目目录
+mkdir ui_auto_test_demo && cd ui_auto_test_demo
 
-# 2. 配置环境变量
-cp .env.example .env
-# 编辑 .env 文件，填入你的 AI 模型 API Key
+# 2. 下载环境变量模板
+curl -O https://raw.githubusercontent.com/levelksk/ui_auto_test_demo/main/.env.example
+mv .env.example .env
 
-# 3. 构建并运行
+# 3. 编辑 .env 文件，填入你的 AI 模型 API Key
+
+# 4. 下载 docker-compose.yml
+curl -O https://raw.githubusercontent.com/levelksk/ui_auto_test_demo/main/docker-compose.yml
+
+# 5. 一键启动（自动拉取预构建镜像）
 docker-compose up -d
-
-# 或者手动构建
-docker build -t midscene-test-platform .
-docker run -d -p 3000:3000 --env-file .env --name midscene-test midscene-test-platform
 ```
 
 访问 http://localhost:3000 打开 Web 界面。
+
+> 💡 镜像已发布到 Docker Hub：`xulingfeng/midscene-test-platform`
 
 ## ⚙️ 配置
 
