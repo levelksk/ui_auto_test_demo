@@ -3,6 +3,17 @@ const puppeteer = require('puppeteer-core');
 const path = require('path');
 const fs = require('fs');
 
+const AI_ACTION_TIMEOUT = 120000;
+
+function withTimeout(promise, ms, errorMsg) {
+    return Promise.race([
+        promise,
+        new Promise((_, reject) => 
+            setTimeout(() => reject(new Error(errorMsg || `操作超时 (${ms}ms)`)), ms)
+        )
+    ]);
+}
+
 async function runMidsceneTest(url, stepsText, onLog) {
     const steps = stepsText.split('\n').filter(s => s.trim());
     const results = {
@@ -77,7 +88,11 @@ async function runMidsceneTest(url, stepsText, onLog) {
             log(`   🔄 执行步骤 ${i + 1}: ${step}`);
             
             try {
-                await agent.aiAct(step);
+                await withTimeout(
+                    agent.aiAct(step),
+                    AI_ACTION_TIMEOUT,
+                    `AI 执行超时 (${AI_ACTION_TIMEOUT / 1000}秒)，请检查网络或模型配置`
+                );
                 results.steps.push({
                     action: step,
                     success: true,
@@ -86,7 +101,11 @@ async function runMidsceneTest(url, stepsText, onLog) {
                 log(`   ✅ 步骤 ${i + 1} 完成`);
 
                 log(`   📸 截取步骤 ${i + 1} 截图...`);
-                await agent.logScreenshot(`步骤 ${i + 1}: ${step}`);
+                await withTimeout(
+                    agent.logScreenshot(`步骤 ${i + 1}: ${step}`),
+                    30000,
+                    '截图超时'
+                );
                 log(`   ✅ 已截取步骤 ${i + 1} 截图`);
             } catch (stepError) {
                 results.steps.push({
