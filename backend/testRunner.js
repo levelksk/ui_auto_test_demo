@@ -45,7 +45,12 @@ async function runMidsceneTest(url, stepsText, onLog) {
                 '--disable-setuid-sandbox',
                 '--disable-dev-shm-usage',
                 '--disable-gpu',
-                '--window-size=1280,800'
+                '--disable-software-rasterizer',
+                '--disable-extensions',
+                '--disable-web-security',
+                '--disable-features=IsolateOrigins,site-per-process',
+                '--window-size=1280,800',
+                '--font-render-hinting=none'
             ]
         });
         
@@ -102,8 +107,15 @@ async function runMidsceneTest(url, stepsText, onLog) {
         if (fs.existsSync(reportDir)) {
             const reports = fs.readdirSync(reportDir)
                 .filter(f => f.endsWith('.html'))
-                .map(f => `/reports/${f}`);
-            results.screenshots = reports;
+                .map(f => ({
+                    name: f,
+                    time: fs.statSync(path.join(reportDir, f)).mtime.getTime()
+                }))
+                .sort((a, b) => b.time - a.time);
+            
+            if (reports.length > 0) {
+                results.screenshots = [`/reports/${reports[0].name}`];
+            }
         }
 
         results.message = `成功执行 ${results.steps.filter(s => s.success).length}/${results.steps.length} 个步骤`;
@@ -126,15 +138,28 @@ async function runMidsceneTest(url, stepsText, onLog) {
 }
 
 function findChrome() {
-    const possiblePaths = [
+    const envPath = process.env.CHROME_PATH;
+    if (envPath && fs.existsSync(envPath)) {
+        return envPath;
+    }
+
+    const dockerPath = process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/google-chrome-stable';
+    if (fs.existsSync(dockerPath)) {
+        return dockerPath;
+    }
+
+    const defaultPaths = [
         'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
         'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
         process.env.LOCALAPPDATA + '\\Google\\Chrome\\Application\\chrome.exe',
         process.env.PROGRAMFILES + '\\Google\\Chrome\\Application\\chrome.exe',
         process.env['PROGRAMFILES(X86)'] + '\\Google\\Chrome\\Application\\chrome.exe',
+        '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+        '/usr/bin/google-chrome',
+        '/usr/bin/chromium-browser',
     ];
 
-    for (const p of possiblePaths) {
+    for (const p of defaultPaths) {
         if (p && fs.existsSync(p)) {
             return p;
         }
