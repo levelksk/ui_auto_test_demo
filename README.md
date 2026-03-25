@@ -236,16 +236,22 @@ MIDSCENE_MODEL_FAMILY=deepseek-vl
 ```
 ui_auto_test_demo/
 ├── backend/
-│   ├── server.js        # Express 服务器
-│   └── testRunner.js    # 测试执行引擎
+│   ├── server.js           # Express 服务器
+│   └── testRunner.js       # 测试执行引擎
 ├── frontend/
-│   ├── index.html       # Web 界面
-│   ├── style.css        # 样式
-│   └── app.js           # 前端逻辑
-├── Dockerfile           # Docker 镜像配置
-├── docker-compose.yml   # Docker 编排配置
-├── .env.example         # 环境变量示例
-└── package.json         # Node.js 配置
+│   ├── index.html          # Web 界面
+│   ├── style.css           # 样式
+│   └── app.js              # 前端逻辑
+├── Dockerfile              # Docker 镜像配置
+├── docker-compose.yml      # Docker 编排配置（预构建镜像）
+├── docker-compose.build.yml # Docker 编排配置（本地构建）
+├── .env.example            # 环境变量示例
+├── .dockerignore           # Docker 忽略文件
+├── .gitignore              # Git 忽略文件
+├── CONTRIBUTING.md         # 贡献指南
+├── LICENSE                 # MIT 许可证
+├── README.md               # 项目说明
+└── package.json            # Node.js 配置
 ```
 
 ## 🔧 技术栈
