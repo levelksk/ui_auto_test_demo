@@ -181,6 +181,14 @@ main {
     color: #cca700;
 }
 
+.result-content div {
+    padding: 2px 0;
+    white-space: pre-wrap;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
 .screenshots {
     margin-top: 20px;
     display: grid;

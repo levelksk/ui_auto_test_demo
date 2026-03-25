@@ -35,32 +35,37 @@ async function runTest() {
     statusText.textContent = '正在执行测试...';
     statusText.style.color = '#667eea';
     timeText.textContent = '';
-    resultContent.innerHTML = '<span class="info">正在连接 Midscene 引擎...</span>\n<span class="warning">测试可能需要 1-3 分钟，请耐心等待</span>';
+    resultContent.innerHTML = '';
     screenshots.innerHTML = '';
 
     const startTime = Date.now();
 
-    const timeoutId = setTimeout(() => {
-        resultContent.innerHTML += '\n<span class="warning">⏳ 测试执行时间较长，请继续等待...</span>';
-    }, 30000);
+    const eventSource = new EventSource(
+        `${API_BASE}/test/stream?url=${encodeURIComponent(url)}&steps=${encodeURIComponent(steps)}`
+    );
 
-    try {
-        const controller = new AbortController();
-        const timeoutPromise = setTimeout(() => controller.abort(), 300000);
+    eventSource.addEventListener('start', (e) => {
+        const data = JSON.parse(e.data);
+        appendLog(data.message, 'info');
+    });
 
-        const response = await fetch(`${API_BASE}/test`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ url, steps }),
-            signal: controller.signal
-        });
+    eventSource.addEventListener('log', (e) => {
+        const data = JSON.parse(e.data);
+        const msg = data.message;
+        
+        if (msg.includes('✅')) {
+            appendLog(msg, 'success');
+        } else if (msg.includes('❌')) {
+            appendLog(msg, 'error');
+        } else if (msg.includes('🔄')) {
+            appendLog(msg, 'warning');
+        } else {
+            appendLog(msg, 'info');
+        }
+    });
 
-        clearTimeout(timeoutPromise);
-        clearTimeout(timeoutId);
-
-        const data = await response.json();
+    eventSource.addEventListener('complete', (e) => {
+        const data = JSON.parse(e.data);
         const endTime = Date.now();
         const duration = ((endTime - startTime) / 1000).toFixed(2);
 
@@ -70,22 +75,8 @@ async function runTest() {
             statusText.textContent = '✅ 测试完成';
             statusText.style.color = '#4ec9b0';
             
-            let resultHtml = '<span class="success">测试执行成功！</span>\n\n';
-            resultHtml += `<span class="info">测试网站: ${url}</span>\n`;
-            resultHtml += `<span class="info">执行步骤: ${data.steps.length} 个</span>\n`;
-            resultHtml += `<span class="info">耗时: ${duration}秒</span>\n\n`;
-            
-            data.steps.forEach((step, index) => {
-                const status = step.success ? '✅' : '❌';
-                const className = step.success ? 'success' : 'error';
-                resultHtml += `<span class="${className}">${status} 步骤${index + 1}: ${step.action}</span>\n`;
-            });
-
-            if (data.message) {
-                resultHtml += `\n<span class="info">📋 ${data.message}</span>`;
-            }
-
-            resultContent.innerHTML = resultHtml;
+            appendLog(`\n🎉 测试执行成功！耗时 ${duration}秒`, 'success');
+            appendLog(`📋 ${data.message}`, 'info');
 
             if (data.screenshots && data.screenshots.length > 0) {
                 screenshots.innerHTML = '<h3>📸 测试报告</h3>';
@@ -101,23 +92,46 @@ async function runTest() {
         } else {
             statusText.textContent = '❌ 测试失败';
             statusText.style.color = '#f14c4c';
-            resultContent.innerHTML = `<span class="error">错误: ${data.error || data.message}</span>`;
+            appendLog(`\n❌ ${data.message}`, 'error');
         }
-    } catch (error) {
-        clearTimeout(timeoutId);
-        statusText.textContent = '❌ 连接失败';
-        statusText.style.color = '#f14c4c';
-        
-        if (error.name === 'AbortError') {
-            resultContent.innerHTML = '<span class="error">请求超时（超过5分钟）</span>';
-        } else {
-            resultContent.innerHTML = `<span class="error">无法连接到服务器: ${error.message}</span>\n\n<span class="warning">请确保后端服务已启动 (npm run dev)</span>`;
-        }
-    } finally {
+
+        eventSource.close();
         isRunning = false;
         runBtn.disabled = false;
         runBtn.innerHTML = '<span class="btn-icon">▶</span> 执行测试';
-    }
+    });
+
+    eventSource.addEventListener('error', (e) => {
+        const data = JSON.parse(e.data);
+        statusText.textContent = '❌ 测试失败';
+        statusText.style.color = '#f14c4c';
+        appendLog(`\n❌ 错误: ${data.error}`, 'error');
+        
+        eventSource.close();
+        isRunning = false;
+        runBtn.disabled = false;
+        runBtn.innerHTML = '<span class="btn-icon">▶</span> 执行测试';
+    });
+
+    eventSource.onerror = () => {
+        statusText.textContent = '❌ 连接失败';
+        statusText.style.color = '#f14c4c';
+        appendLog('\n❌ 无法连接到服务器', 'error');
+        
+        eventSource.close();
+        isRunning = false;
+        runBtn.disabled = false;
+        runBtn.innerHTML = '<span class="btn-icon">▶</span> 执行测试';
+    };
+}
+
+function appendLog(message, type = 'info') {
+    const resultContent = document.getElementById('resultContent');
+    const line = document.createElement('div');
+    line.className = type;
+    line.textContent = message;
+    resultContent.appendChild(line);
+    resultContent.scrollTop = resultContent.scrollHeight;
 }
 
 function clearForm() {
