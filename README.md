@@ -16,47 +16,83 @@
 ### 方式一：本地运行
 
 ```bash
-# 克隆项目
+# 1. 克隆项目
 git clone https://github.com/levelksk/ui_auto_test_demo.git
 cd ui_auto_test_demo
 
-# 安装依赖
+# 2. 安装依赖
 npm install
 
-# 配置环境变量
+# 3. 配置环境变量
 cp .env.example .env
-# 编辑 .env 文件，填入你的 AI 模型 API Key
+```
 
-# 启动服务
+**4. 编辑 .env 文件（重要！）**
+
+打开 `.env` 文件，配置以下内容：
+
+```env
+# ============================================
+# AI 模型配置（必填）
+# ============================================
+MIDSCENE_MODEL_NAME=qwen3-vl-plus
+MIDSCENE_MODEL_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
+MIDSCENE_MODEL_API_KEY=your-api-key-here    # 替换为你的 API Key
+MIDSCENE_MODEL_FAMILY=qwen-vl
+
+# ============================================
+# Chrome 浏览器路径（可选）
+# ============================================
+# 如果程序提示"未找到 Chrome 浏览器"，请取消下面注释并修改路径
+# Windows:
+# CHROME_PATH=C:\Program Files\Google\Chrome\Application\chrome.exe
+# macOS:
+# CHROME_PATH=/Applications/Google Chrome.app/Contents/MacOS/Google Chrome
+# Linux:
+# CHROME_PATH=/usr/bin/google-chrome
+```
+
+**5. 启动服务**
+
+```bash
 npm run dev
 ```
+
+访问 http://localhost:3000 打开 Web 界面。
 
 ### 方式二：Docker 部署（推荐）
 
 ```bash
-# 克隆项目
+# 1. 克隆项目
 git clone https://github.com/levelksk/ui_auto_test_demo.git
 cd ui_auto_test_demo
 
-# 配置环境变量
+# 2. 配置环境变量
 cp .env.example .env
 # 编辑 .env 文件，填入你的 AI 模型 API Key
 
-# 构建镜像
-docker build -t midscene-test-platform .
-
-# 运行容器
-docker run -d -p 3000:3000 --env-file .env --name midscene-test midscene-test-platform
-
-# 或者使用 docker-compose
+# 3. 构建并运行
 docker-compose up -d
+
+# 或者手动构建
+docker build -t midscene-test-platform .
+docker run -d -p 3000:3000 --env-file .env --name midscene-test midscene-test-platform
 ```
 
 访问 http://localhost:3000 打开 Web 界面。
 
 ## ⚙️ 配置
 
-在 `.env` 文件中配置 AI 模型：
+### 环境变量说明
+
+| 变量名 | 必填 | 说明 |
+|--------|------|------|
+| `MIDSCENE_MODEL_NAME` | ✅ | AI 模型名称 |
+| `MIDSCENE_MODEL_API_KEY` | ✅ | AI 模型 API Key |
+| `MIDSCENE_MODEL_BASE_URL` | ❌ | API 地址（部分模型需要） |
+| `MIDSCENE_MODEL_FAMILY` | ❌ | 模型家族（部分模型需要） |
+| `CHROME_PATH` | ❌ | Chrome 路径（默认自动检测） |
+| `PORT` | ❌ | 服务端口（默认 3000） |
 
 ### 支持的 AI 模型
 
@@ -169,40 +205,82 @@ ui_auto_test_demo/
 
 ## ⚠️ 注意事项
 
-### Docker 部署注意事项
-
-1. **环境变量传递**
-   - 必须使用 `--env-file .env` 参数传递环境变量
-   - 或者在 `docker-compose.yml` 中配置环境变量
-   - 容器内无法直接读取宿主机的环境变量
-
-2. **镜像拉取问题**
-   - 国内用户可能需要配置 Docker 镜像加速器
-   - 推荐配置阿里云、腾讯云等镜像源
-   - Docker Desktop 设置路径：Settings → Docker Engine
-
-3. **Chrome 浏览器**
-   - Docker 镜像已预装 Chrome，无需额外安装
-   - Chrome 路径已配置在环境变量中
-
-4. **权限问题**
-   - 容器以非 root 用户运行，确保目录权限正确
-   - 如遇权限问题，检查 `midscene_run` 和 `screenshots` 目录权限
-
 ### 本地运行注意事项
 
-1. **Chrome 浏览器**
-   - 需要安装 Chrome 浏览器
-   - 程序会自动检测 Chrome 路径
-   - 如检测失败，可设置 `CHROME_PATH` 环境变量
+#### 1. Chrome 浏览器配置
 
-2. **网络问题**
-   - 确保 AI 模型 API 可访问
-   - 国内用户使用 OpenAI 需要配置代理
+程序会按以下顺序查找 Chrome：
 
-3. **端口占用**
-   - 默认使用 3000 端口
-   - 如端口被占用，修改 `backend/server.js` 中的端口号
+1. **环境变量 `CHROME_PATH`**（优先级最高）
+2. **默认路径自动检测**
+
+**Windows 常见路径：**
+```
+C:\Program Files\Google\Chrome\Application\chrome.exe
+C:\Program Files (x86)\Google\Chrome\Application\chrome.exe
+%LOCALAPPDATA%\Google\Chrome\Application\chrome.exe
+```
+
+**macOS 常见路径：**
+```
+/Applications/Google Chrome.app/Contents/MacOS/Google Chrome
+```
+
+**Linux 常见路径：**
+```
+/usr/bin/google-chrome
+/usr/bin/chromium-browser
+```
+
+**如果提示"未找到 Chrome 浏览器"，请在 `.env` 文件中添加：**
+
+```env
+# Windows 示例
+CHROME_PATH=C:\Program Files\Google\Chrome\Application\chrome.exe
+
+# macOS 示例
+# CHROME_PATH=/Applications/Google Chrome.app/Contents/MacOS/Google Chrome
+
+# Linux 示例
+# CHROME_PATH=/usr/bin/google-chrome
+```
+
+#### 2. 网络问题
+
+- 确保 AI 模型 API 可访问
+- 国内用户使用 OpenAI 需要配置代理
+
+#### 3. 端口占用
+
+- 默认使用 3000 端口
+- 如端口被占用，可在 `.env` 中设置：
+  ```env
+  PORT=3001
+  ```
+
+### Docker 部署注意事项
+
+#### 1. 环境变量传递
+
+- 必须使用 `--env-file .env` 参数传递环境变量
+- 或者在 `docker-compose.yml` 中配置环境变量
+- 容器内无法直接读取宿主机的环境变量
+
+#### 2. 镜像拉取问题
+
+- 国内用户可能需要配置 Docker 镜像加速器
+- 推荐配置阿里云、腾讯云等镜像源
+- Docker Desktop 设置路径：Settings → Docker Engine
+
+#### 3. Chrome 浏览器
+
+- Docker 镜像已预装 Chrome，无需额外安装
+- Chrome 路径已配置在环境变量中
+
+#### 4. 权限问题
+
+- 容器以非 root 用户运行，确保目录权限正确
+- 如遇权限问题，检查 `midscene_run` 和 `screenshots` 目录权限
 
 ### 常用 Docker 命令
 
@@ -251,6 +329,30 @@ URL: https://example.com/login
 点击登录按钮
 验证登录成功
 ```
+
+## ❓ 常见问题
+
+### Q: 提示"未找到 Chrome 浏览器"
+
+**A:** 在 `.env` 文件中配置 `CHROME_PATH` 环境变量，指向你的 Chrome 安装路径。
+
+### Q: 提示"Model configuration is incomplete"
+
+**A:** 检查 `.env` 文件中是否正确配置了 `MIDSCENE_MODEL_NAME` 和 `MIDSCENE_MODEL_API_KEY`。
+
+### Q: Docker 容器启动后无法访问
+
+**A:** 
+1. 检查端口是否被占用：`netstat -ano | findstr :3000`
+2. 检查容器日志：`docker logs midscene-test`
+3. 确保使用了 `--env-file .env` 参数
+
+### Q: 执行测试时报网络错误
+
+**A:** 
+1. 检查目标网站是否可访问
+2. 检查 AI 模型 API 是否可访问
+3. 如在国内使用 OpenAI，需要配置代理
 
 ## 🤝 贡献
 
