@@ -62,6 +62,10 @@ npm run dev
 
 ### 方式二：Docker 部署（推荐）
 
+> 💡 镜像已发布到 Docker Hub：[xulingfeng/midscene-test-platform](https://hub.docker.com/r/xulingfeng/midscene-test-platform)
+
+**Linux / macOS：**
+
 ```bash
 # 1. 创建项目目录
 mkdir ui_auto_test_demo && cd ui_auto_test_demo
@@ -71,6 +75,7 @@ curl -O https://raw.githubusercontent.com/levelksk/ui_auto_test_demo/main/.env.e
 mv .env.example .env
 
 # 3. 编辑 .env 文件，填入你的 AI 模型 API Key
+# 例如：MIDSCENE_MODEL_API_KEY=sk-xxxxxx
 
 # 4. 下载 docker-compose.yml
 curl -O https://raw.githubusercontent.com/levelksk/ui_auto_test_demo/main/docker-compose.yml
@@ -79,9 +84,28 @@ curl -O https://raw.githubusercontent.com/levelksk/ui_auto_test_demo/main/docker
 docker-compose up -d
 ```
 
-访问 http://localhost:3000 打开 Web 界面。
+**Windows PowerShell：**
 
-> 💡 镜像已发布到 Docker Hub：`xulingfeng/midscene-test-platform`
+```powershell
+# 1. 创建项目目录
+mkdir ui_auto_test_demo
+cd ui_auto_test_demo
+
+# 2. 下载环境变量模板
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/levelksk/ui_auto_test_demo/main/.env.example" -OutFile ".env"
+
+# 3. 编辑 .env 文件，填入你的 AI 模型 API Key
+# 用记事本打开：notepad .env
+# 填入：MIDSCENE_MODEL_API_KEY=sk-xxxxxx
+
+# 4. 下载 docker-compose.yml
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/levelksk/ui_auto_test_demo/main/docker-compose.yml" -OutFile "docker-compose.yml"
+
+# 5. 一键启动（自动拉取预构建镜像）
+docker-compose up -d
+```
+
+访问 http://localhost:3000 打开 Web 界面。
 
 ## ⚙️ 配置
 
