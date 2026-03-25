@@ -107,6 +107,25 @@ docker-compose up -d
 
 访问 http://localhost:3000 打开 Web 界面。
 
+### 方式三：本地 Docker 构建
+
+如果你想自己构建镜像：
+
+```bash
+# 1. 克隆项目
+git clone https://github.com/levelksk/ui_auto_test_demo.git
+cd ui_auto_test_demo
+
+# 2. 配置环境变量
+cp .env.example .env
+# 编辑 .env 文件，填入你的 AI 模型 API Key
+
+# 3. 构建并启动
+docker-compose up -d --build
+```
+
+访问 http://localhost:3000 打开 Web 界面。
+
 ## ⚙️ 配置
 
 ### 环境变量说明
