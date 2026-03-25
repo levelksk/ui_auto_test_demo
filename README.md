@@ -9,8 +9,11 @@
 - 📊 **可视化报告** - 自动生成 HTML 测试报告
 - 🔄 **实时输出** - 支持 SSE 实时显示测试进度
 - 🌐 **Web 界面** - 简洁易用的 Web 操作界面
+- 🐳 **Docker 支持** - 一键容器化部署
 
 ## 📦 安装
+
+### 方式一：本地运行
 
 ```bash
 # 克隆项目
@@ -23,7 +26,33 @@ npm install
 # 配置环境变量
 cp .env.example .env
 # 编辑 .env 文件，填入你的 AI 模型 API Key
+
+# 启动服务
+npm run dev
 ```
+
+### 方式二：Docker 部署（推荐）
+
+```bash
+# 克隆项目
+git clone https://github.com/levelksk/ui_auto_test_demo.git
+cd ui_auto_test_demo
+
+# 配置环境变量
+cp .env.example .env
+# 编辑 .env 文件，填入你的 AI 模型 API Key
+
+# 构建镜像
+docker build -t midscene-test-platform .
+
+# 运行容器
+docker run -d -p 3000:3000 --env-file .env --name midscene-test midscene-test-platform
+
+# 或者使用 docker-compose
+docker-compose up -d
+```
+
+访问 http://localhost:3000 打开 Web 界面。
 
 ## ⚙️ 配置
 
@@ -99,14 +128,6 @@ MIDSCENE_MODEL_FAMILY=deepseek-vl
 
 ## 🚀 使用
 
-### 启动服务
-
-```bash
-npm run dev
-```
-
-访问 http://localhost:3000 打开 Web 界面。
-
 ### Web 界面使用
 
 1. 输入测试网站 URL
@@ -145,6 +166,68 @@ ui_auto_test_demo/
 - **自动化引擎**: Midscene.js
 - **浏览器**: Puppeteer + Chrome
 - **AI 模型**: 支持阿里千问、OpenAI 等
+
+## ⚠️ 注意事项
+
+### Docker 部署注意事项
+
+1. **环境变量传递**
+   - 必须使用 `--env-file .env` 参数传递环境变量
+   - 或者在 `docker-compose.yml` 中配置环境变量
+   - 容器内无法直接读取宿主机的环境变量
+
+2. **镜像拉取问题**
+   - 国内用户可能需要配置 Docker 镜像加速器
+   - 推荐配置阿里云、腾讯云等镜像源
+   - Docker Desktop 设置路径：Settings → Docker Engine
+
+3. **Chrome 浏览器**
+   - Docker 镜像已预装 Chrome，无需额外安装
+   - Chrome 路径已配置在环境变量中
+
+4. **权限问题**
+   - 容器以非 root 用户运行，确保目录权限正确
+   - 如遇权限问题，检查 `midscene_run` 和 `screenshots` 目录权限
+
+### 本地运行注意事项
+
+1. **Chrome 浏览器**
+   - 需要安装 Chrome 浏览器
+   - 程序会自动检测 Chrome 路径
+   - 如检测失败，可设置 `CHROME_PATH` 环境变量
+
+2. **网络问题**
+   - 确保 AI 模型 API 可访问
+   - 国内用户使用 OpenAI 需要配置代理
+
+3. **端口占用**
+   - 默认使用 3000 端口
+   - 如端口被占用，修改 `backend/server.js` 中的端口号
+
+### 常用 Docker 命令
+
+```bash
+# 查看容器状态
+docker ps
+
+# 查看容器日志
+docker logs midscene-test
+
+# 停止容器
+docker stop midscene-test
+
+# 启动容器
+docker start midscene-test
+
+# 删除容器
+docker rm -f midscene-test
+
+# 重新构建镜像
+docker build -t midscene-test-platform .
+
+# 进入容器调试
+docker exec -it midscene-test bash
+```
 
 ## 📝 示例
 

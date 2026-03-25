@@ -6,11 +6,8 @@ services:
     container_name: midscene-test-platform
     ports:
       - "3000:3000"
-    environment:
-      - MIDSCENE_MODEL_NAME=${MIDSCENE_MODEL_NAME:-qwen3-vl-plus}
-      - MIDSCENE_MODEL_BASE_URL=${MIDSCENE_MODEL_BASE_URL:-https://dashscope.aliyuncs.com/compatible-mode/v1}
-      - MIDSCENE_MODEL_API_KEY=${MIDSCENE_MODEL_API_KEY}
-      - MIDSCENE_MODEL_FAMILY=${MIDSCENE_MODEL_FAMILY:-qwen-vl}
+    env_file:
+      - .env
     volumes:
       - ./midscene_run:/app/midscene_run
       - ./screenshots:/app/screenshots
