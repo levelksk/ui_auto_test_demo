@@ -76,12 +76,10 @@ ui_auto_test_demo/
 │   ├── index.html       # Web 界面
 │   ├── style.css        # 样式
 │   └── app.js           # 前端逻辑
-├── demo_basic.py        # browser-use 基础示例
-├── demo_simple.py       # browser-use 简单示例
-├── demo_cost.py         # browser-use 成本分析示例
+├── Dockerfile           # Docker 镜像配置
+├── docker-compose.yml   # Docker 编排配置
 ├── .env.example         # 环境变量示例
-├── package.json         # Node.js 配置
-└── requirements.txt     # Python 依赖
+└── package.json         # Node.js 配置
 ```
 
 ## 🔧 技术栈
