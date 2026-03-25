@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI自动化测试平台 - Midscene.js</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🤖 AI自动化测试平台</h1>
+            <p class="subtitle">基于 Midscene.js 的智能测试执行引擎</p>
+        </header>
+
+        <main>
+            <section class="input-section">
+                <div class="form-group">
+                    <label for="url">🌐 测试网站地址</label>
+                    <input type="url" id="url" placeholder="https://example.com" />
+                </div>
+
+                <div class="form-group">
+                    <label for="steps">📝 测试步骤 (每行一个步骤)</label>
+                    <textarea id="steps" rows="8" placeholder="示例：
+点击登录按钮
+在用户名输入框输入 admin
+在密码输入框输入 123456
+点击提交按钮
+验证页面显示欢迎信息"></textarea>
+                </div>
+
+                <div class="button-group">
+                    <button id="runBtn" onclick="runTest()">
+                        <span class="btn-icon">▶</span> 执行测试
+                    </button>
+                    <button id="clearBtn" onclick="clearForm()">
+                        <span class="btn-icon">🗑</span> 清空
+                    </button>
+                </div>
+            </section>
+
+            <section class="result-section" id="resultSection" style="display: none;">
+                <h2>📊 测试结果</h2>
+                
+                <div class="status-bar">
+                    <span id="statusText">准备执行...</span>
+                    <span id="timeText"></span>
+                </div>
+
+                <div class="result-content" id="resultContent">
+                    <!-- 结果将在这里显示 -->
+                </div>
+
+                <div class="screenshots" id="screenshots">
+                    <!-- 截图将在这里显示 -->
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Powered by Midscene.js | 道码出品</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
