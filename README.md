@@ -367,3 +367,7 @@ URL: https://example.com/login
 - [Midscene.js](https://midscenejs.com/) - AI 驱动的 UI 自动化框架
 - [Puppeteer](https://pptr.dev/) - 浏览器自动化工具
 - [阿里千问](https://tongyi.aliyun.com/) - AI 大模型服务
+- [OpenAI](https://openai.com/) - GPT 系列大模型
+- [火山引擎](https://www.volcengine.com/) - 豆包大模型
+- [智谱 AI](https://www.bigmodel.cn/) - GLM 系列大模型
+- [DeepSeek](https://www.deepseek.com/) - 开源大模型
