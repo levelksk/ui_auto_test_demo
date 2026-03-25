@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   midscene-test:
+    build: .
     image: xulingfeng/midscene-test-platform:latest
     container_name: midscene-test-platform
     ports:

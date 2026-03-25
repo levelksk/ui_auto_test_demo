@@ -121,7 +121,7 @@ cp .env.example .env
 # 编辑 .env 文件，填入你的 AI 模型 API Key
 
 # 3. 构建并启动
-docker-compose up -d --build
+docker-compose -f docker-compose.build.yml up -d --build
 ```
 
 访问 http://localhost:3000 打开 Web 界面。
